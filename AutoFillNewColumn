@@ -1,0 +1,12 @@
+Sub AutoFillNewColumn(ColumnHeader As Range, ColumnTitle As String, ByVal Formula As String)
+'Public Sub designed to create a new column, insert a column header, value, and autofill the value relative to any other columns next to it.
+Dim WB, Ws As String
+    WB = ColumnHeader.Worksheet.Parent.Name
+    Ws = ColumnHeader.Worksheet.Name
+    ColumnHeader.Value = ColumnTitle
+    ColumnHeader.Offset(1, 0).Value = Formula
+'Formula here looks convoluted, but it's just a Find function designed so that the Autofill can take place regardless of what sheet or workbook its on.
+    ColumnHeader.Offset(1, 0).AutoFill _
+        Destination:=Workbooks(WB).Sheets(Ws).Range(ColumnHeader.Offset(1, 0), _
+        Workbooks(WB).Sheets(Ws).Cells(Workbooks(WB).Sheets(Ws).Cells.Find(What:="*", After:=Workbooks(WB).Sheets(Ws).Cells(1), LookAt:=xlPart, LookIn:=xlFormulas, SearchOrder:=xlByRows, SearchDirection:=xlPrevious, MatchCase:=False).Row, _
+        ColumnHeader.Column))
