@@ -1,0 +1,70 @@
+Sub OpenFilesInFolder()
+ 
+'Confirmation MsgBox
+    Confirm = MsgBox("Once activated, this macro cannot be undone.  Are your files and folder prepared?", vbYesNo, "Warning")
+        If Confirm <> vbYes Then
+            Exit Sub
+        End If
+ 
+'Declare variables.  Must be unique to this sheet to avoid overlap with variables from other procedures.
+	Dim Folder, File, SaveName As String
+	Dim FileCount, SuccessCount, FailureCount, CountLastRow As Integer
+	Dim fso As New Scripting.FileSystemObject
+'Pull folder name
+	Folder = FolderSelect(Folder, "Please select the folder in which you want to operate on.", "Select the folder you want to operate on.")
+			If Folder = "" Then
+				Exit Sub
+			End If
+	File = Dir(Folder & "\*")
+'Disable screen updating and display alerts so the procedure can act with no disrupting visuals.
+	Application.ScreenUpdating = False
+	Application.DisplayAlerts = False
+ 
+'Determine number of files within folder, and use that number to create an array.
+    Do Until File = ""
+        FileCount = FileCount + 1
+        File = Dir
+    Loop
+    Dim CompletedList() As String
+    ReDim CompletedList(1 To FileCount, 1 To 2)
+    File = Dir(Folder & "\*")
+ 
+'Open all files.  Error handler is for any files that could not open.
+For TotalFiles = 1 To FileCount
+    On Error Resume Next
+        Workbooks.Open Filename:=Folder & "\" & File
+        If Err <> 0 Then 'Adds a note to the array that this file did not open.
+            On Error GoTo 0
+            CompletedList(TotalFiles, 1) = File
+            CompletedList(TotalFiles, 2) = "Failure"
+            File = Dir
+        Else            'Runs the code you want on the file, then closes the workbook and notes the file as a success.
+            On Error GoTo 0
+        '---Insert block of code on next line---
+        '---Inserted block of code ends here---
+            ActiveWorkbook.SaveAs Filename:="CSV" & fso.GetBaseName(ActiveWorkbook.Name), FileFormat:=xlCSVUTF8
+				'Note that the SaveAs code must be changed to a different file type if you do not want a CSV file.
+            ActiveWorkbook.Close
+            CompletedList(TotalFiles, 1) = File
+           CompletedList(TotalFiles, 2) = "Success"
+            File = Dir
+        End If
+Next i
+Application.DisplayAlerts = True
+Application.ScreenUpdating = True
+'Create a new workbook and use array to list what files were and were not opened.
+    Workbooks.Add
+    With ActiveWorkbook.Sheets(1)
+            .Cells(1, 1).Value = "FileName"
+            .Cells(1, 2).Value = "Status"
+        For i = 1 To FileCount
+            .Cells(TotalFiles + 1, 1).Value = CompletedList(TotalFiles, 1)
+            .Cells(TotalFiles + 1, 2).Value = CompletedList(TotalFiles, 2)
+        Next i
+        CountLastRow = .Range("A" & Rows.Count).End(xlUp).Row
+        SuccessCount = Application.WorksheetFunction.CountIf(.Range("B2:B" & CountLastRow), "Success")
+        FailureCount = Application.WorksheetFunction.CountIf(.Range("B2:B" & CountLastRow), "Failure")
+    End With
+'Inform user that the process is done.
+    Finished = MsgBox("Procedure is finished with " & SuccessCount & " successes and " & FailureCount & " failures out of " & FileCount & " files.", vbCritical, "Complete")
+End Sub
