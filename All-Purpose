@@ -1,0 +1,53 @@
+'Code used to trigger below functions and acquire workbook.
+    'Acquire external workbook.
+        filepath = FileSelect(filepath, "Please select the desired workbook.", "Select the desired workbook")
+            If filepath = "" Then
+                Exit Sub
+            End If
+        CheckOpenWorkbook (filepath)
+        filepath = GetFilenameFromPath(filepath)
+        ExternalWB = Workbooks(filepath).Name
+        ExternalSht = Workbooks(filepath).Sheets(1).Name
+    
+   
+
+'EXTERNAL WORKBOOK SELECT: PART 1
+Public Function FileSelect(ByVal filepath As String, Message As String, Title As String)
+'Automates the process of selecting an external workbook.
+Dim WK As FileDialog
+        Set WK = Application.FileDialog(msoFileDialogFilePicker)
+    MsgBox (Message)
+         With WK
+            .AllowMultiSelect = False
+            .Title = Title
+             If .Show = False Then
+                Exit Function
+             End If
+         FileSelect = .SelectedItems.Item(1)
+         End With
+End Function
+
+'EXTERNAL WORKBOOK SELECT: PART 2
+Public Sub CheckOpenWorkbook(filepath As String)
+If CheckWorkbookIsOpen(filepath) = False Then
+Workbooks.Open filepath
+End If
+End Sub
+
+'EXTERNAL WORKBOOK SELECT: PART 3
+Public Function CheckWorkbookIsOpen(chkSumfile As String) As Boolean
+    On Error Resume Next
+    CheckFileIsOpen = (Workbooks(chkSumfile).Name = chkSumfile)
+    On Error GoTo 0
+End Function
+
+'EXTERNAL WORKBOOK SELECT: PART 4
+Public Function GetFilenameFromPath(ByVal strPath As String) As String
+' Returns the rightmost characters of a string upto but not including the rightmost '\'
+' e.g. 'c:\winnt\win.ini' returns 'win.ini'
+'Code from Stackoverflow: https://stackoverflow.com/questions/1743328/how-to-extract-file-name-from-path
+
+    If Right$(strPath, 1) <> "\" And Len(strPath) > 0 Then
+        GetFilenameFromPath = GetFilenameFromPath(Left$(strPath, Len(strPath) - 1)) + Right$(strPath, 1)
+    End If
+End Function
