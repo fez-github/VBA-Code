@@ -68,3 +68,17 @@ Application.ScreenUpdating = True
 'Inform user that the process is done.
     Finished = MsgBox("Procedure is finished with " & SuccessCount & " successes and " & FailureCount & " failures out of " & FileCount & " files.", vbCritical, "Complete")
 End Sub
+Private Function FolderSelect(ByVal folderpath As String, Message As String, Title As String)
+'Automates the process of selecting an external workbook.
+Dim WK As FileDialog
+        Set WK = Application.FileDialog(msoFileDialogFolderPicker)
+    MsgBox (Message)
+         With WK
+            .AllowMultiSelect = False
+            .Title = Title
+             If .Show = False Then
+                Exit Function
+             End If
+         FolderSelect = .SelectedItems.Item(1)
+         End With
+End Function
