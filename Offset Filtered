@@ -1,0 +1,70 @@
+Public Function OffsetF(reference As Range, rows As Integer, columns As Integer)
+'Purpose: User-Defined Function that replicates Offset, but ignores filtered rows.
+'Utilizes the VBA functions of Offset.
+'Have attempted to use Resize, but has caused complications.  At the moment it cannot be done.
+
+'Declare integers used to control looping
+    Dim i, j, k, l, m As Integer
+    Dim newReference As Range
+    Dim finalReference As Range
+'Check for filtered rows for Rows value.
+    If rows <> 0 Then
+        j = LoopStartingPoint(rows)
+        i = j
+        rows = LoopInitiator(i, j, reference, rows, True)
+    End If
+'Check for filtered columns for Columns value.
+    If columns <> 0 Then
+        k = LoopStartingPoint(columns)
+        i = k
+        columns = LoopInitiator(i, k, reference, columns, False)
+    End If
+'Create range that determines offset position.
+    Set newReference = reference.Offset(rows, columns)
+    Set OffsetF = newReference
+End Function
+Function LoopStartingPoint(value As Integer)
+'Determine what value and direction to loop in, depending on whether the value is positive or negative.
+    If value >= 1 Then
+        LoopStartingPoint = 1
+    ElseIf value <= -1 Then
+        LoopStartingPoint = -1
+    End If
+End Function
+Function LoopInitiator(ByVal i As Integer, ByVal j As Integer, reference As Range, field As Integer, row As Boolean)
+'Purpose: Increase the size of the original offset argument value in order to accommodate for the filtered cells.
+
+'I controls the loop duration, and is incremented in order to offset further throughout the loop.
+'J increments i and field
+'Reference is the range originally targeted
+'field is the rows/columns/height/width value, and is what will be returned.
+'Row bool controls whether or not rows or columns will be checked.
+If j > 0 Then
+    Do While i <= field
+        If row = False Then
+            If reference.Offset(0, i).EntireColumn.Hidden = True Then
+                field = field + j
+            End If
+        Else
+            If reference.Offset(i, 0).EntireRow.Hidden = True Then
+                field = field + j
+            End If
+        End If
+        i = i + j
+    Loop
+Else
+    Do While i >= field
+        If row = False Then
+            If reference.Offset(0, i).EntireColumn.Hidden = True Then 'Procedure ended here because it was looping left, and went past row 1.
+                field = field + j
+            End If
+        Else
+            If reference.Offset(i, 0).EntireRow.Hidden = True Then
+                field = field + j
+            End If
+        End If
+        i = i + j
+    Loop
+End If
+    LoopInitiator = field
+End Function
