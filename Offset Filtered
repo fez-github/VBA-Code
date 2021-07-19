@@ -1,12 +1,9 @@
-Public Function OffsetF(reference As Range, rows As Integer, columns As Integer)
+Function OFFSETF(reference As Range, rows As Long, columns As Long) As Range
 'Purpose: User-Defined Function that replicates Offset, but ignores filtered rows.
-'Utilizes the VBA functions of Offset.
 'Have attempted to use Resize, but has caused complications.  At the moment it cannot be done.
 
 'Declare integers used to control looping
-    Dim i, j, k, l, m As Integer
-    Dim newReference As Range
-    Dim finalReference As Range
+    Dim i As Long, j As Long, k As Long
 'Check for filtered rows for Rows value.
     If rows <> 0 Then
         j = LoopStartingPoint(rows)
@@ -19,11 +16,10 @@ Public Function OffsetF(reference As Range, rows As Integer, columns As Integer)
         i = k
         columns = LoopInitiator(i, k, reference, columns, False)
     End If
-'Create range that determines offset position.
-    Set newReference = reference.Offset(rows, columns)
-    Set OffsetF = newReference
+'Use adjusted values to create range that determines new offset position.
+    Set OFFSETF = reference.Offset(rows, columns)
 End Function
-Function LoopStartingPoint(value As Integer)
+Function LoopStartingPoint(value As Long) As Integer
 'Determine what value and direction to loop in, depending on whether the value is positive or negative.
     If value >= 1 Then
         LoopStartingPoint = 1
@@ -31,39 +27,34 @@ Function LoopStartingPoint(value As Integer)
         LoopStartingPoint = -1
     End If
 End Function
-Function LoopInitiator(ByVal i As Integer, ByVal j As Integer, reference As Range, field As Integer, row As Boolean)
+Function LoopInitiator(loopPosition As Long, loopDirection As Long, reference As Range, field As Long, row As Boolean) As Long
 'Purpose: Increase the size of the original offset argument value in order to accommodate for the filtered cells.
 
-'I controls the loop duration, and is incremented in order to offset further throughout the loop.
-'J increments i and field
-'Reference is the range originally targeted
-'field is the rows/columns/height/width value, and is what will be returned.
-'Row bool controls whether or not rows or columns will be checked.
-If j > 0 Then
-    Do While i <= field
-        If row = False Then
-            If reference.Offset(0, i).EntireColumn.Hidden = True Then
-                field = field + j
+If loopDirection > 0 Then
+    Do While loopPosition <= field
+        If row = True Then
+            If reference.Offset(i, 0).EntireRow.Hidden = True Then
+                field = field + loopDirection
             End If
         Else
-            If reference.Offset(i, 0).EntireRow.Hidden = True Then
-                field = field + j
+            If reference.Offset(0, i).EntireColumn.Hidden = True Then
+                field = field + loopDirection
             End If
         End If
-        i = i + j
+        loopPosition = loopPosition + loopDirection
     Loop
 Else
     Do While i >= field
         If row = False Then
-            If reference.Offset(0, i).EntireColumn.Hidden = True Then 'Procedure ended here because it was looping left, and went past row 1.
-                field = field + j
+            If reference.Offset(i, 0).EntireRow.Hidden = True Then 'Procedure ended here because it was looping left, and went past row 1.
+                field = field + loopDirection
             End If
         Else
-            If reference.Offset(i, 0).EntireRow.Hidden = True Then
-                field = field + j
+            If reference.Offset(0, i).EntireColumn.Hidden = True Then
+                field = field + loopDirection
             End If
         End If
-        i = i + j
+        loopPosition = loopPosition + loopDirection
     Loop
 End If
     LoopInitiator = field
