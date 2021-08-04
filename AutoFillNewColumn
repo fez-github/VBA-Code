@@ -34,7 +34,7 @@ With Workbooks(wbName).Sheets(wsName)
         ColumnHeader.Offset(1, 0).AutoFill _
             Destination:=.Range(ColumnHeader.Offset(1, 0), .Cells(.Cells.Find _
             (What:="*", After:=.Cells(1), LookAt:=xlPart, LookIn:=xlFormulas, SearchOrder:=xlByRows, SearchDirection:=xlPrevious, MatchCase:=False).row, _
-            ColumnHeader.Column)).SpecialCells(xlCellTypeVisible), Type:=typeFill
+            ColumnHeader.Column)).SpecialCells(xlCellTypeVisible), Type:=fillType
     End If
 End With
 End Sub
