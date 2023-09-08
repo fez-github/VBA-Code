@@ -4,7 +4,6 @@ Sub All_Files_In_Folder()
 'Test capabilities of opening files with a name.
 'New FileSelect procedure makes this code less useful, but this could still be used as a base for later.
 '   Ex. We need to run procedures on all files in a folder, and it's easier to not have the user select it.
-'Written by: Mark Hansen
 'Last Updated: July 22, 2021
 
 'Declare variables
