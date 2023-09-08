@@ -16,7 +16,6 @@
     
 Public Sub AutoFillNewColumn(ColumnHeader As Range, ColumnTitle As String, ByVal Formula As String, Optional fillType As AutofillType)
 'Purpose: To quickly populate a column with a header and common formula.
-'Written by: Mark Hansen
 'Last Updated: July 13, 2021
 
 'Declare variables.  Used for acquiring specific workbook/worksheet information for later.
@@ -41,7 +40,6 @@ End Sub
 
 Public Sub AutoFillFilteredColumn(ColumnHeader As Range, ColumnTitle As String, ByVal Formula As String)
 'Purpose: To quickly populate a column with a header and common formula, assuming the rest of the table was filtered.
-'Written by: Mark Hansen
 'NOTE: A proper Autofill will not work with filters enabled.
 'Last Updated: July 13, 2021
 
