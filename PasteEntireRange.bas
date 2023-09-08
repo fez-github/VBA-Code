@@ -27,7 +27,6 @@ Public Sub Paste_New_Range(sourceRange As Range, destinationRange As Range, head
     Optional typePaste As PasteSpecialType, Optional operator As PasteSpecialOperation, _
     Optional skipBlankRows As Boolean, Optional transposeRange As Boolean)
 'Purpose: To group multiple ranges from across workbooks/worksheets together more easily.
-'Written by: Mark Hansen
 'Last Updated: July 21, 2021
     
 'Declare variables
