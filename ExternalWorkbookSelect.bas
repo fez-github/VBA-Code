@@ -1,8 +1,8 @@
 'EXTERNAL WORKBOOK SELECT: PART 1A
 Public Function FileSelect(message As String, Title As String)
 'Purpose: Automates the process of selecting an external workbook.
-'Written by: Mark Hansen
 'Last Updated: July 26, 2021
+
 Dim WK As FileDialog
         Set WK = Application.FileDialog(msoFileDialogFilePicker)
     MsgBox (message)
@@ -15,11 +15,12 @@ Dim WK As FileDialog
                 FileSelect = .selectedItems.Item(1)
          End With
 End Function
+
 'EXTERNAL WORKBOOK SELECT: PART 1B
 Public Function MultiFileSelect(filename() As String, message As String, Title As String)
 'Purpose: Automates the process of selecting multiple external workbooks.
-'Written by: Mark Hansen
 'Last Updated: July 26, 2021
+
 Dim i As Integer
 Dim WK As FileDialog
         Set WK = Application.FileDialog(msoFileDialogFilePicker)
@@ -37,6 +38,7 @@ Dim WK As FileDialog
          End With
          MultiFileSelect = filename()
 End Function
+
 'EXTERNAL WORKBOOK SELECT: PART 2
 Public Sub CheckOpenWorkbook(filename As String)
 'Source: https://www.mrexcel.com/board/threads/vba-code-to-open-an-excel-file-only-if-not-already-open.431458/
@@ -44,6 +46,7 @@ If CheckFileIsOpen(filename) = False Then
     Workbooks.Open filename
 End If
 End Sub
+
 'EXTERNAL WORKBOOK SELECT: PART 3
 Function CheckFileIsOpen(chkSumfile As String) As Boolean
 'Source: https://www.mrexcel.com/board/threads/vba-code-to-open-an-excel-file-only-if-not-already-open.431458/
@@ -51,6 +54,7 @@ Function CheckFileIsOpen(chkSumfile As String) As Boolean
     CheckFileIsOpen = (Workbooks(chkSumfile).name = chkSumfile)
     On Error GoTo 0
 End Function
+
 'EXTERNAL WORKBOOK SELECT: PART 4
 Public Function GetFilenameFromPath(strPath As String) As String
 ' Returns the rightmost characters of a string upto but not including the rightmost '\'
