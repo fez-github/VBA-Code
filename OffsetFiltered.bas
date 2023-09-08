@@ -27,6 +27,7 @@ Function LoopStartingPoint(value As Long) As Integer
         LoopStartingPoint = -1
     End If
 End Function
+
 Function LoopInitiator(loopPosition As Long, loopDirection As Long, reference As Range, field As Long, row As Boolean) As Long
 'Purpose: Increase the size of the original offset argument value in order to accommodate for the filtered cells.
 
